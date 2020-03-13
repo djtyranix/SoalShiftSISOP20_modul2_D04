@@ -5,11 +5,14 @@
 2. Yaniar Pradityas Effendi (05111840000047)
 
 # Penjelasan dan Penyelesaian Soal Praktikum
-# Soal Nomor 1
+## 1. Soal Nomor 1
 
-# Soal Nomor 2
+## 2. Soal Nomor 2
 
-# Soal Nomor 3
+## 3. Soal Nomor 3
+Link ke file yang dibuat:
+* [soal3.c](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal3/soal3.c) - Soal 3
+
 ## Soal
 Jaya adalah seorang programmer handal mahasiswa informatika. Suatu hari dia
 memperoleh tugas yang banyak dan berbeda tetapi harus dikerjakan secara bersamaan
