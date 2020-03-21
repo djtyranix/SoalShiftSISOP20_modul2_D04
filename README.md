@@ -298,4 +298,4 @@ Untuk memanggil fungsi moving dilakukan seperti di atas.
 
 Berikut adalah hasilnya :
 
-![Hasil Soal 3](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image.png)
+![Hasil Soal 3](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal3/images/image.png)
