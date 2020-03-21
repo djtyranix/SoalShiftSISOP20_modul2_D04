@@ -337,6 +337,91 @@ while (1)
   }
 ```
 
+Terlihat panjang. Namun, sebenarnya inti dari program tersebut adalah pada isi if else yang dimulai pada ```if(child_proc == 0)```.
+Berikut adalah inti dari program tersebut :
+```
+if(child_proc == 0) // Download per 5 detik & zip-> child
+    {
+      int i = 0;
+      while(i < 20) //Download per 5 detik
+      {
+        pid_t download;
+        download = fork();
+
+        if(download < 0)
+        {
+          exit(EXIT_FAILURE);
+        }
+
+        if(download == 0)
+        {
+          char* namafile = format_time();
+          //char *wget[7] = {"wget", "-P", lokasidownload, "-O", namafile, linkdownload, NULL};
+          char *wget[5] = {"wget", "-P", lokasidownload, linkdownload, NULL};
+          execvp("wget", wget);
+        }
+        i++;
+        sleep(5);
+      }
+      char directory[200];
+      chdir(cwd);
+      char *zip[6] = {"zip", "-m", "-r", namazip, datestr, NULL};
+      execvp("zip", zip);
+    }
+    else // make new folder stiap 30s -> parent
+    {
+
+      pid_t makeDir;
+        makeDir = fork();
+
+        if(makeDir < 0)
+        {
+          exit(EXIT_FAILURE);
+        }
+
+        if(makeDir == 0)
+        {
+          char *mkdir[3] = {"mkdir", lokasidownload, NULL};
+
+          execv("/bin/mkdir", mkdir);
+        }
+      
+      sleep(30);
+    }
+```
+
+Di dalam if else tersebut, program membelah menjadi 2 proses, yaitu parent process(else) dan child process(if). Parent process disini adalah proses pembuatan folder dengan format [YYYY-mm-dd_HH:ii:ss].
+```
+char *mkdir[3] = {"mkdir", lokasidownload, NULL};
+execv("/bin/mkdir", mkdir);
+```
+
+Berfungsi sebagai pembuat folder.
+
+Lalu, pada child proses, akan dilakukan 20 kali looping dengan perintah yang sama tiap loop, yaitu membuat fork yang akan melakukan proses wget dari web yang tertera pada soal. Ukuran gambar didapat dari rumus yang telah diberikan pada soal.
+```
+long int ukurangambar = (t % 1000) + 100;
+```
+
+Disinilah terdapat error ke-2, yaitu perihal tidak dapat renaming file. ```wget``` sebenarnya menyediakan parameter ```-O``` untuk memberikan nama file, bahkan fungsi untuk mendapatkan nama file sudah ada dan di cek kebenarannya. Namun, entah mengapa ```wget``` yang dijalankan dengan ```execvp``` tidak dapat menerima parameter tersebut. Alhasil, proses ```wget``` tidak berjalan sebagaimana mestinya. Untuk itu, perintah ```wget``` disini tetap menggunakan nama file asli supaya program dapat berjalan dengan baik.
+Berikut adalah komparasi dari 2 kode wget :
+```
+char *wget[7] = {"wget", "-P", lokasidownload, "-O", namafile, linkdownload, NULL};
+```
+
+Kode di atas tidak dapat berjalan.
+```
+char *wget[5] = {"wget", "-P", lokasidownload, linkdownload, NULL};
+```
+
+Kode diatas dapat berjalan dengan baik.
+
+Untuk melakukan zip dan delete folder awal, akan menggunakan perintah ```zip```. Namun sebelum itu, perlu dilakukan change directory ke current working directory karena daemon program berjalan dalam root directory.
+```
+chdir(cwd);
+char *zip[6] = {"zip", "-m", "-r", namazip, datestr, NULL};
+execvp("zip", zip);
+```
 
 ## 3. Soal Nomor 3
 Link ke file yang dibuat:
