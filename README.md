@@ -128,11 +128,11 @@ Kondisi if untuk mengecek apakah waktu saat ini sama atau sesuai dengan input ar
 
 Menjalankan Program: 
 
-![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image.png)
+![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image1.png)
 
-![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image.png)
+![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image2.png)
 
-![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image.png)
+![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image3.png)
 
 ## 2. Soal Nomor 2
 Link ke file yang dibuat:
