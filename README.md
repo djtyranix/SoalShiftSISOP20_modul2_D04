@@ -27,7 +27,112 @@ Program dengan argumen seperti contoh di atas akan menjalankan script test.sh se
 detik pada jam 07:34.
 
 ## Jawaban
-File sudah tersedia, tetapi masih error.
+```
+int main(int argc, char *argv[]) {
+  if(argc != 5){
+    printf("ERROR: argumen yang diberikan tidak sesuai\n");
+    exit(EXIT_FAILURE);
+  }
+```
+
+Input dari argumen disimpan dalam char *argv[]. Sementara int argc adalah jumlah argumen yang dimasukkan, dipisahkan oleh spasi. Sesuai dengan perintah soal maka argumen yang dimasukkan harus berjumlah 5, yaitu input untuk run file output gcc, input karakter ‘*’ atau angka 0-59 untuk detik dan menit, input karakter ‘*’ atau angka 0-23 untuk jam, dan terakhir input path file .sh. Selain itu maka pesan error muncul.
+```
+else{
+    int times[4];
+    int i;
+    char command[1024];
+    for(i = 1; i <= 3; i++){
+      if(strlen(argv[i]) > 2){
+        printf("ERROR: argumen yang diberikan tidak sesuai\n");
+        exit(EXIT_FAILURE);
+      }
+```
+
+Untuk argv[1], argv[2], dan argv[3] yang merupakan argumen yang mewakili detik, menit dan jam harus diisi ‘*’ atau angka 0-59 (detik dan menit) atau 0-23 (jam), sehingga panjang input seharusnya tidak lebih dari 2, jika lebih dari 2 maka pesan error muncul.
+```
+      else if(strcmp(argv[i], "*") == 0){
+        times[i] = -1; //for every (sec/min/hour)
+      }
+```
+
+Untuk nilai detik, menit, dan jam yang diinput ‘*’ (any value) maka ditandai dengan nilai -1 dan dipindahkan ke array of integer times[].
+```
+ int j, alpha = 0;
+        for(j = 0 ; j < (strlen(argv[i]) + 1); j++){
+          if(isalpha(argv[i][j])){
+            alpha = 1;
+            break;
+          }
+        }
+        if(alpha == 1){
+          printf("ERROR: argumen yang diberikan tidak sesuai\n");
+          exit(EXIT_FAILURE);
+        }
+        else{
+        times[i] = atoi(argv[i]);
+          if(times[i]<0){
+            printf("ERROR: argumen yang diberikan tidak sesuai\n");
+            exit(EXIT_FAILURE);
+          }
+```
+
+Di dalam else, untuk nilai detik, menit, dan jam harus diisi karakter angka dan tidak boleh ada huruf. Dengan isalpha() jika ditemukan huruf maka nilai alpha menjadi 1 dan keluar dari loop. Kemudian jika alpha bernilai 1 maka pesan error muncul. Jika tidak terdapat huruf maka input dari argv[] diubah ke integer dan dimasukkan ke array times. Ada satu kondisi lagi dimana jika ternyata angka yang diinput adalah kurang dari 0 maka pesan error muncul.
+```
+if (times[1] < -1 || times[1] > 59){
+      printf("ERROR: argumen yang diberikan tidak sesuai\n");
+      exit(EXIT_FAILURE);
+    }
+    if (times[2] < -1 || times[2] > 59){
+      printf("ERROR: argumen yang diberikan tidak sesuai\n");
+      exit(EXIT_FAILURE);
+    }
+    if (times[3] < -1 || times[3] > 23){
+      printf("ERROR: argumen yang diberikan tidak sesuai\n");
+      exit(EXIT_FAILURE);
+    }
+    strcpy(command, argv[4]);
+```
+
+Kondisi-kondisi if di atas untuk menyeleksi bila nilai yang diinput dan telah dimasukkan ke array times tidak memenuhi aturan maka pesan error muncul.
+```
+      time_t t;
+  	  struct tm *tm;
+      t = time(NULL);
+      tm = localtime(&t);
+```
+
+Untuk mengambil waktu saat ini.
+```
+      if((times[1] == -1 || tm->tm_sec == times[1]) && (times[2] == -1 || tm->tm_min == times[2]) && (times[3] == -1 || tm->tm_hour == times[3])){
+        
+        pid_t child_id;
+        int status;
+        child_id = fork();
+
+        if (child_id < 0) {
+          exit(EXIT_FAILURE);
+        }
+        if (child_id == 0){
+          char *argvv[] = {"bash", command, NULL};
+          execv("/bin/bash", argvv);
+        }
+        else{
+          wait(NULL);
+        }
+      }
+      sleep(1); //interval every second
+    }
+```
+
+Kondisi if untuk mengecek apakah waktu saat ini sama atau sesuai dengan input argumen yang diberikan, jika sesuai maka bash akan dijalankan dengan execv sesuai path file .sh yang diinputkan. Hal ini akan dilakukan terus menerus while(1), mengecek waktu terus-menerus tiap detiknya sehingga diberi interval jeda 1 detik dengan sleep(1).
+
+Menjalankan Program: 
+
+![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image.png)
+
+![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image.png)
+
+![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image.png)
 
 ## 2. Soal Nomor 2
 Link ke file yang dibuat:
@@ -193,4 +298,4 @@ Untuk memanggil fungsi moving dilakukan seperti di atas.
 
 Berikut adalah hasilnya :
 
-![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image.png)
+![Hasil Soal 3](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image.png)
