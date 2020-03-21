@@ -126,6 +126,8 @@ untuk direktori “.” dan “..” dilewati.
       if(a->d_type == DT_DIR){
         sprintf(src,"%s%s%s", "/home/yaniarpe/modul2/jpg/", a->d_name, "/");
         sprintf(src2,"%s%s%s", "/home/yaniarpe/modul2/indomie/", a->d_name, "/");
+        sprintf(file,"%s%s", src2, "coba1.txt");
+        sprintf(file2,"%s%s", src2, "coba2.txt");
         child_id2 = fork();
         if (child_id2 < 0) {
           exit(EXIT_FAILURE);
@@ -136,17 +138,21 @@ untuk direktori “.” dan “..” dilewati.
         }
 ```
 
-Jika direktori berjenis folder, format path asal nama folder disimpan ke dalam src, sementara src2 untuk menyimpan format path nama folder jika telah dipindah. Pemindahan folder dilakukan dengan execv() yang melakukan mv.
+Jika direktori berjenis folder, format path asal nama folder disimpan ke dalam src, sementara src2 untuk menyimpan format path nama folder jika telah dipindah. Dan variabel file dan file2 menyimpan path untuk file txt yang akan dibuat. Pemindahan folder dilakukan dengan execv() yang melakukan mv.
 ```
-          if (child_id == 0) {
-            sprintf(file,"%s%s", src2, "coba1.txt");
-            sprintf(file2,"%s%s", src2, "coba2.txt");
-            char *argv5[] = {"touch", file, file2, NULL};
+          if (child == 0) {
+            char *argv5[] = {"touch", file, NULL};
             execv("/usr/bin/touch", argv5);
           }
+          else{
+            while((wait(&status))>0){
+              sleep(3);
+              char *argv5[] = {"touch", file2, NULL};
+              execv("/usr/bin/touch", argv5);
+            }
 ```
 
-Ini untuk membuat file kosong coba1.txt dan coba2.txt pada setiap folder yang memiliki format nama sesuai variabel src 2
+Ini untuk membuat file kosong coba1.txt dan coba2.txt pada setiap folder yang memiliki format nama sesuai variabel file dan file2
 ```      
       else{
         sprintf(src,"%s%s", "/home/yaniarpe/modul2/jpg/", a->d_name);
@@ -185,3 +191,5 @@ Untuk melakukan extract pada file jpg.zip dapat menggunakan execv() unzip dan ha
 
 Untuk memanggil fungsi moving dilakukan seperti di atas.
 
+Berikut adalah hasilnya :
+![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image.png)
