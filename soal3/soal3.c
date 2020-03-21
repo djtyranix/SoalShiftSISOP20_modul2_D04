@@ -2,9 +2,10 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <sys/wait.h>
 #include <dirent.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
 
 void moving (const char* path){
   pid_t child_id, child_id2, child;
@@ -33,6 +34,8 @@ void moving (const char* path){
       if(a->d_type == DT_DIR){
         sprintf(src,"%s%s%s", "/home/yaniarpe/modul2/jpg/", a->d_name, "/");
         sprintf(src2,"%s%s%s", "/home/yaniarpe/modul2/indomie/", a->d_name, "/");
+        sprintf(file,"%s%s", src2, "coba1.txt");
+        sprintf(file2,"%s%s", src2, "coba2.txt");
         child_id2 = fork();
         if (child_id2 < 0) {
           exit(EXIT_FAILURE);
@@ -44,17 +47,19 @@ void moving (const char* path){
         else{
           wait(NULL);
           child = fork();
-          if (child_id < 0) {
+          if (child < 0) {
             exit(EXIT_FAILURE);
           }
-          if (child_id == 0) {
-            sprintf(file,"%s%s", src2, "coba1.txt");
-            sprintf(file2,"%s%s", src2, "coba2.txt");
-            char *argv5[] = {"touch", file, file2, NULL};
+          if (child == 0) {
+            char *argv5[] = {"touch", file, NULL};
             execv("/usr/bin/touch", argv5);
           }
           else{
-            wait(NULL);
+            while((wait(&status))>0){
+              sleep(3);
+              char *argv5[] = {"touch", file2, NULL};
+              execv("/usr/bin/touch", argv5);
+            }
           }
         }
       }
