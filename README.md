@@ -192,4 +192,5 @@ Untuk melakukan extract pada file jpg.zip dapat menggunakan execv() unzip dan ha
 Untuk memanggil fungsi moving dilakukan seperti di atas.
 
 Berikut adalah hasilnya :
+
 ![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image.png)
