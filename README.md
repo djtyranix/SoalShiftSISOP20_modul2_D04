@@ -31,7 +31,7 @@ File sudah tersedia, tetapi masih error.
 
 ## 2. Soal Nomor 2
 Link ke file yang dibuat:
-* [soal2.c](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal2/test) - Soal 2
+* [soal2.c](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal2/soal2.c) - Soal 2
 
 ## Soal
 Shisoppu mantappu! itulah yang selalu dikatakan Kiwa setiap hari karena sekarang dia
