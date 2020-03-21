@@ -186,7 +186,157 @@ tertentu
 - Epoch Unix bisa didapatkan dari time()
 
 ## Jawaban
-Untuk jawaban belum ada.
+Dalam program ini, kita diminta untuk membuat suatu program DAEMON (terpisah dari terminal) yang bekerja tiap 30 detik untuk membuat suatu folder, lalu mengisi tiap tiap folder dengan gambar per 5 detik sampai 20 gambar. Setelah 20 gambar selesai di download, folder tersebut di zip dengan nama yang sama dengan folder tersebut, lalu tidak menyisakan apapun selain zip tersebut (folder di delete). Program akan membuat suatu killer file pada saat program utama dijalankan, dan pembuatan killer file sesuai dengan mode aplikasi yang di input pada saat penjalanan program utama, yaitu -a dan -b.
+
+```
+void makeFile(char* args) // MAKING KILLER FILE!
+{
+  int i;
+  FILE *fp; //file pointer
+
+  if(strcmp(args, "-a") == 0) // DIRECTLY KILL THE FUCKING PROGRAM A.K.A. SIGKILL
+  {
+    fp = fopen("KILLTHEMALL", "w"); //w -> write
+    char str[] = "killall -SIGKILL soal2; rm KILLTHEMALL;\n";
+    for (i = 0; str[i] != '\n'; i++)
+    {
+      /* write to file using fputc() function */
+      fputc(str[i], fp);
+    }
+    fclose(fp);
+  }
+  else if(strcmp(args, "-b") == 0) // SIGCHLD
+  {
+    fp = fopen("KILLTHEMALL", "w"); //w -> write
+    char str[] = "killall -SIGCHLD soal2; rm KILLTHEMALL;\n";
+    for (i = 0; str[i] != '\n'; i++)
+    {
+      /* write to file using fputc() function */
+      fputc(str[i], fp);
+    }
+    fclose(fp);
+  }
+  else // WRONG ARGS
+  {
+    printf("MODE not found. Please try again.\n");
+    exit(EXIT_FAILURE);
+  }
+
+  pid_t anjay;
+  anjay = fork();
+  if (anjay < 0)
+  {
+    exit(EXIT_FAILURE);
+  }
+  if (anjay == 0)
+  {
+    char *chmod[4] = {"chmod", "+x", "KILLTHEMALL", NULL};
+    execv("/bin/chmod", chmod);
+  }
+}
+```
+
+Fungsi di atas adalah sebuah fungsi template yang berguna untuk membuat suatu file. Input dari fungsi tersebut adalah argumen yang dimasukkan. Jika -a, maka akan membuat file KILLTHEMALL dengan isi :
+```
+killall -SIGKILL soal2; rm KILLTHEMALL;
+```
+
+Menggunakan SIGKILL karena akan memberhentikan program secara langsung tanpa melihat state suatu program. Jika -b, maka akan membuat file KILLTHEMALL dengan isi :
+```
+killall -SIGCHLD soal2; rm KILLTHEMALL;
+```
+
+Disini adalah letak error pertama dalam soal nomor 2, yaitu ada kemungkinan kesalahan penulisan program sedari awal, sehingga setiap signal yang di coba akan menghasilkan 3 hasil yang tidak sesuai dengan permintaan soal, yaitu:
+1. Hasil seperti -a (SIGKILL)
+2. Hasil seperti SIGKILL, tetapi saat ```ps -ef``` terlihat ada bagian proses dari soal2.c yang berjalan
+3. Tidak terjadi apa apa
+
+Saat program dijalankan TANPA argumen, maka akan muncul error. Saat program dijalankan dengan argumen yang salah, maka akan muncul error. Saat program dijalankan dengan argumen yang lebih banyak dari yang seharusnya, maka akan muncul error.
+
+Sebagian dari fungsi ```int main()``` merupakan hasil copy paste dari template daemon yang sudah tersedia pada modul 2. Pada argumen yang diinputkan pada ```int main()``` adalah ```int main(int argc,char* argv[])```. Hal ini berguna untuk mengambil input arguments saat penjalanan program lewat terminal. Berikut adalah "main program" dari soal2 :
+```
+while (1)
+  {
+    pid_t child_proc;
+    child_proc = fork();
+
+    time_t t = time(NULL); // getting local time
+    long int ukurangambar = (t % 1000) + 100;
+    struct tm tm = *localtime(&t);
+    char datestr[50];
+    sprintf(datestr, "%d-%02d-%02d_%02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+    char lokasidownload[100]; //lokasi download
+    strcpy(lokasidownload, cwd);
+    strcat(lokasidownload, "/");
+    strcat(lokasidownload, datestr);
+
+    char linkdownload[100]; //link download
+    strcpy(linkdownload, "https://picsum.photos/");
+    char ukurangambarstr[50];
+    sprintf(ukurangambarstr, "%ld", ukurangambar);
+    strcat(linkdownload, ukurangambarstr);
+
+    char namazip[50];
+    strcpy(namazip, datestr);
+    strcat(namazip, ".zip");
+
+    if(child_proc < 0)
+    {
+      exit(EXIT_FAILURE);
+    }
+
+    if(child_proc == 0) // Download per 5 detik & zip-> child
+    {
+      int i = 0;
+      while(i < 20) //Download per 5 detik
+      {
+        pid_t download;
+        download = fork();
+
+        if(download < 0)
+        {
+          exit(EXIT_FAILURE);
+        }
+
+        if(download == 0)
+        {
+          char* namafile = format_time();
+          //char *wget[7] = {"wget", "-P", lokasidownload, "-O", namafile, linkdownload, NULL};
+          char *wget[5] = {"wget", "-P", lokasidownload, linkdownload, NULL};
+          execvp("wget", wget);
+        }
+        i++;
+        sleep(5);
+      }
+      char directory[200];
+      chdir(cwd);
+      char *zip[6] = {"zip", "-m", "-r", namazip, datestr, NULL};
+      execvp("zip", zip);
+    }
+    else // make new folder stiap 30s -> parent
+    {
+
+      pid_t makeDir;
+        makeDir = fork();
+
+        if(makeDir < 0)
+        {
+          exit(EXIT_FAILURE);
+        }
+
+        if(makeDir == 0)
+        {
+          char *mkdir[3] = {"mkdir", lokasidownload, NULL};
+
+          execv("/bin/mkdir", mkdir);
+        }
+      
+      sleep(30);
+    }
+  }
+```
+
 
 ## 3. Soal Nomor 3
 Link ke file yang dibuat:
