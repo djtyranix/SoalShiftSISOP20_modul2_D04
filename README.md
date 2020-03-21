@@ -132,7 +132,13 @@ Menjalankan Program: 
 
 ![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image2.png)
 
+Isi dari date.sh:
+
 ![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image3.png)
+
+Output pada date.txt:
+
+![Hasil Soal 1](https://github.com/djtyranix/SoalShiftSISOP20_modul2_D04/blob/master/soal1/images/image4.png)
 
 ## 2. Soal Nomor 2
 Link ke file yang dibuat:
